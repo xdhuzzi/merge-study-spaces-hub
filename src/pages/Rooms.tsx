@@ -154,7 +154,7 @@ const Rooms = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#F5F5F5]">
+    <div className="min-h-screen flex bg-background">
       <DashboardSidebar />
       
       <div className="flex-1 flex flex-col">
@@ -171,7 +171,7 @@ const Rooms = () => {
               placeholder="Search rooms by name or tag"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 border-secondary focus:border-accent"
+              className="pl-12 h-12 bg-white border-gray-300 focus:border-accent focus:ring-accent text-primary placeholder:text-secondary"
             />
           </div>
           
@@ -221,7 +221,7 @@ const Rooms = () => {
                   variant="outline"
                   onClick={handleLoadMore}
                   disabled={loading}
-                  className="border-primary text-primary hover:bg-primary hover:text-white"
+                  className="border-primary text-primary hover:bg-primary hover:text-white bg-white"
                 >
                   {loading ? "Loading..." : "Load More"}
                 </Button>

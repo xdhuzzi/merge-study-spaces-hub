@@ -90,7 +90,7 @@
   }
 
   body {
-    @apply bg-[#F5F5F5] text-foreground;
+    @apply bg-background text-foreground;
   }
 }
 
@@ -100,6 +100,20 @@
   }
   
   .card-hover {
-    @apply transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl;
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
