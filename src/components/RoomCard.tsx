@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Users, BookOpen } from "lucide-react";
 
 interface Member {
   id: string;
@@ -21,12 +22,12 @@ interface RoomCardProps {
   onLeave: (roomId: string) => void;
 }
 
-const categoryColors = {
-  math: 'bg-blue-600',
-  science: 'bg-green-600', 
-  language: 'bg-purple-600',
-  history: 'bg-orange-600',
-  other: 'bg-accent'
+const categoryConfig = {
+  math: { color: 'bg-blue-500', icon: BookOpen, label: 'Mathematics' },
+  science: { color: 'bg-green-500', icon: BookOpen, label: 'Science' }, 
+  language: { color: 'bg-purple-500', icon: BookOpen, label: 'Language' },
+  history: { color: 'bg-orange-500', icon: BookOpen, label: 'History' },
+  other: { color: 'bg-accent', icon: BookOpen, label: 'Other' }
 };
 
 const RoomCard = ({ 
@@ -40,86 +41,103 @@ const RoomCard = ({
   onEnter, 
   onLeave 
 }: RoomCardProps) => {
-  const displayedMembers = members.slice(0, 4);
-  const extraMembersCount = members.length - 4;
+  const categoryInfo = categoryConfig[category];
+  const displayedMembers = members.slice(0, 3);
+  const extraMembersCount = members.length - 3;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-sm h-60 flex flex-col card-hover animate-fade-in overflow-hidden">
-      {/* Category stripe */}
-      <div className={`h-2 ${categoryColors[category]}`} />
+    <div className="group bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden h-72">
+      {/* Category Header */}
+      <div className={`${categoryInfo.color} px-4 py-3 flex items-center justify-between`}>
+        <div className="flex items-center space-x-2">
+          <categoryInfo.icon size={16} className="text-white" />
+          <span className="text-white text-sm font-medium">{categoryInfo.label}</span>
+        </div>
+        {isJoined && (
+          <div className="bg-white/20 backdrop-blur-sm rounded-full px-2 py-1">
+            <span className="text-white text-xs font-medium">Joined</span>
+          </div>
+        )}
+      </div>
       
-      {/* Card content */}
-      <div className="flex-1 p-5 flex flex-col">
-        {/* Title and instructor */}
+      {/* Card Content */}
+      <div className="p-5 flex flex-col h-full">
+        {/* Title and Instructor */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-primary mb-1 line-clamp-2 leading-tight">{name}</h3>
-          <p className="text-sm text-secondary font-medium">by {instructor}</p>
+          <h3 className="text-lg font-bold text-primary mb-2 line-clamp-2 leading-tight group-hover:text-accent transition-colors">
+            {name}
+          </h3>
+          <p className="text-sm text-secondary font-medium flex items-center">
+            <span className="w-2 h-2 bg-secondary rounded-full mr-2"></span>
+            {instructor}
+          </p>
         </div>
         
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {tags.slice(0, 3).map((tag, index) => (
+          {tags.slice(0, 2).map((tag, index) => (
             <Badge 
               key={index} 
               variant="secondary" 
-              className="text-xs bg-gray-100 text-secondary hover:bg-gray-200 border-0 px-2 py-1 rounded-md font-medium"
+              className="text-xs bg-muted text-secondary hover:bg-accent hover:text-white transition-colors border-0 px-3 py-1 rounded-full font-medium"
             >
               {tag}
             </Badge>
           ))}
-          {tags.length > 3 && (
+          {tags.length > 2 && (
             <Badge 
               variant="secondary" 
-              className="text-xs bg-gray-100 text-secondary border-0 px-2 py-1 rounded-md font-medium"
+              className="text-xs bg-muted text-secondary border-0 px-3 py-1 rounded-full font-medium"
             >
-              +{tags.length - 3}
+              +{tags.length - 2}
             </Badge>
           )}
         </div>
         
-        {/* Bottom section */}
-        <div className="flex items-end justify-between mt-auto">
-          {/* Member avatars */}
+        {/* Members Section */}
+        <div className="mb-4 flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
+            <Users size={16} className="text-secondary" />
+            <span className="text-sm text-secondary font-medium">{members.length} members</span>
+          </div>
           <div className="flex -space-x-2">
-            {displayedMembers.map((member, index) => (
-              <Avatar key={member.id} className="w-8 h-8 border-2 border-white ring-1 ring-gray-200">
+            {displayedMembers.map((member) => (
+              <Avatar key={member.id} className="w-8 h-8 border-2 border-white ring-1 ring-gray-100">
                 <AvatarImage src={member.avatar} />
-                <AvatarFallback className="text-xs bg-gray-100 text-secondary font-medium">
+                <AvatarFallback className="text-xs bg-muted text-secondary font-medium">
                   {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
             ))}
             {extraMembersCount > 0 && (
-              <div className="w-8 h-8 bg-gray-100 border-2 border-white ring-1 ring-gray-200 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-muted border-2 border-white ring-1 ring-gray-100 rounded-full flex items-center justify-center">
                 <span className="text-xs text-secondary font-medium">+{extraMembersCount}</span>
               </div>
             )}
-            {members.length === 0 && (
-              <div className="w-8 h-8 bg-gray-50 border-2 border-gray-200 rounded-full flex items-center justify-center">
-                <span className="text-xs text-gray-400">0</span>
-              </div>
-            )}
           </div>
-          
-          {/* Action buttons */}
-          <div className="flex space-x-2">
+        </div>
+        
+        {/* Action Buttons - Always show both buttons for consistency */}
+        <div className="mt-auto pt-4 border-t border-gray-100">
+          <div className="flex space-x-3">
             <Button 
-              size="sm" 
               onClick={() => onEnter(id)}
-              className="bg-primary hover:bg-primary/90 text-white text-sm px-4 py-2 h-8 font-medium rounded-md shadow-sm"
+              className="flex-1 bg-primary hover:bg-primary/90 text-white font-medium rounded-lg h-10 shadow-sm transition-all hover:shadow-md"
             >
-              Enter
+              Enter Room
             </Button>
-            {isJoined && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => onLeave(id)}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50 text-sm px-3 py-2 h-8 font-medium rounded-md"
-              >
-                Leave
-              </Button>
-            )}
+            <Button 
+              variant="outline" 
+              onClick={() => onLeave(id)}
+              disabled={!isJoined}
+              className={`px-4 border-2 font-medium rounded-lg h-10 transition-all ${
+                isJoined 
+                  ? 'border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300' 
+                  : 'border-gray-200 text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              {isJoined ? 'Leave' : 'Not Joined'}
+            </Button>
           </div>
         </div>
       </div>
